@@ -24,11 +24,11 @@ export class BankAccount{
     }
 
     withdraw(amount: number){
-        if(this.balance >= amount){
-            this.balance -= amount;
-        }else{
+        if(amount > this.balance){
             throw new Error("Not enough money");
-        }   
+        }
+
+        this.balance -= amount;  
     }
 
     transferTo(otherAccount: BankAccount, amount: number){
