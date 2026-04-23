@@ -1,6 +1,6 @@
 import { BankAccount } from "./BankAccount.js";
 
-class CheckingAccount extends BankAccount{
+export class CheckingAccount extends BankAccount{
     overdraftLimit: number;
 
     constructor(owner: string, overdraftLimit: number){
