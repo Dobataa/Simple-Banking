@@ -4,11 +4,17 @@ export class BankAccount{
     owner: string;
     private balance: number
     transactionHistory: Transaction[]
+    dailyWithdrawalLimit: number
+    remainingDailyWithdrawalLimit: number
+    lastWithdrawn: Date
 
-    constructor(owner: string){
+    constructor(owner: string, dailyWithdrawalLimit: number){
         this.owner = owner;
         this.balance = 0;
         this.transactionHistory = [];
+        this.dailyWithdrawalLimit = dailyWithdrawalLimit;
+        this.remainingDailyWithdrawalLimit = dailyWithdrawalLimit;
+        this.lastWithdrawn = new Date();
     }
 
     getBalance(){
@@ -35,7 +41,20 @@ export class BankAccount{
             throw new Error("Not enough money");
         }
 
+        const now = new Date();
+
+        if(this.isDifferentDay(this.lastWithdrawn, now)){
+            this.remainingDailyWithdrawalLimit = this.dailyWithdrawalLimit;
+        }
+
+        if(amount > this.remainingDailyWithdrawalLimit){
+            throw new Error("Daily withdraw limit is exceeded");
+        }
+
         this.balance -= amount;
+        this.remainingDailyWithdrawalLimit -= amount;
+        
+        this.lastWithdrawn = now;
 
         let transaction = new Transaction("withdraw", amount, this.balance)
         this.transactionHistory.push(transaction); 
@@ -53,7 +72,19 @@ export class BankAccount{
         otherAccount.deposit(amount);
         this.balance -= amount;
         
-        let transaction = new Transaction("transfer", amount, this.balance, this.owner, otherAccount.owner);
+        let transaction = new Transaction
+        (
+            "transfer", 
+            amount, 
+            this.balance, 
+            this.owner, 
+            otherAccount.owner
+        );
+
         this.transactionHistory.push(transaction); 
+    }
+
+    protected isDifferentDay(d1: Date, d2: Date): boolean {
+        return d1.toDateString() !== d2.toDateString();
     }
 }
