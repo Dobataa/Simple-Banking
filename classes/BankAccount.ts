@@ -1,10 +1,12 @@
 export class BankAccount{
     owner: string;
     private balance: number
+    transactionHistory: string[]
 
     constructor(owner: string){
         this.owner = owner;
         this.balance = 0;
+        this.transactionHistory = [];
     }
 
     getBalance(){
@@ -16,11 +18,12 @@ export class BankAccount{
     }
 
     deposit(amount: number){
-        if(amount > 0){
-            this.balance += amount;
-        }else{
+        if(amount < 0){
             throw new Error("Cannot deposit negative amount");
         }
+
+        this.balance += amount;
+        this.transactionHistory.push(`Deposited ${amount}`);
     }
 
     withdraw(amount: number){
@@ -28,7 +31,8 @@ export class BankAccount{
             throw new Error("Not enough money");
         }
 
-        this.balance -= amount;  
+        this.balance -= amount;
+        this.transactionHistory.push(`Withdrawed ${amount}`);  
     }
 
     transferTo(otherAccount: BankAccount, amount: number){
@@ -42,5 +46,6 @@ export class BankAccount{
 
         otherAccount.deposit(amount);
         this.balance -= amount;
+        this.transactionHistory.push(`Transfer ${amount} to ${otherAccount.owner}`);  
     }
 }
