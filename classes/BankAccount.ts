@@ -7,6 +7,7 @@ export class BankAccount{
     dailyWithdrawalLimit: number
     remainingDailyWithdrawalLimit: number
     lastWithdrawn: Date
+    withdrawFee: number
 
     constructor(owner: string, dailyWithdrawalLimit: number){
         this.owner = owner;
@@ -15,6 +16,7 @@ export class BankAccount{
         this.dailyWithdrawalLimit = dailyWithdrawalLimit;
         this.remainingDailyWithdrawalLimit = dailyWithdrawalLimit;
         this.lastWithdrawn = new Date();
+        this.withdrawFee = 0.5;
     }
 
     getBalance(){
@@ -37,7 +39,7 @@ export class BankAccount{
     }
 
     withdraw(amount: number){
-        if(amount > this.balance){
+        if(amount + this.withdrawFee > this.balance){
             throw new Error("Not enough money");
         }
 
@@ -51,13 +53,14 @@ export class BankAccount{
             throw new Error("Daily withdraw limit is exceeded");
         }
 
-        this.balance -= amount;
+        this.balance -= amount + this.withdrawFee;
         this.remainingDailyWithdrawalLimit -= amount;
         
         this.lastWithdrawn = now;
 
-        let transaction = new Transaction("withdraw", amount, this.balance)
-        this.transactionHistory.push(transaction); 
+        let transaction = new Transaction("withdraw", amount, this.balance);
+        let withdrawFee = new Transaction("fee", this.withdrawFee, this.balance - this.withdrawFee);
+        this.transactionHistory.push(transaction, withdrawFee); 
     }
 
     transferTo(otherAccount: BankAccount, amount: number){

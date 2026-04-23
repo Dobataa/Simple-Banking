@@ -3,9 +3,11 @@ import { Transaction } from "./Transaction.js";
 
 export class CheckingAccount extends BankAccount{
     overdraftLimit: number;
+    isFeeApplied: boolean;
 
     constructor(owner: string, dailyWithdrawalLimit: number, overdraftLimit: number){
         super(owner, dailyWithdrawalLimit );
+        this.isFeeApplied = false;
 
         if(overdraftLimit >= 0){
             this.overdraftLimit = overdraftLimit;
@@ -31,10 +33,24 @@ export class CheckingAccount extends BankAccount{
             throw new Error("Overdraft Limit exceeded")
         }
 
-        this.setBalance(balance - amount);
+        if(balance - amount < 0){
+            if(this.isDifferentDay(this.lastWithdrawn, new Date)){
+                this.isFeeApplied = false;
+            }
+            
+            if(!this.isFeeApplied){
+                this.isFeeApplied = true;
+
+                let transaction = new Transaction("fee", amount, balance - amount);
+                this.transactionHistory.push(transaction); 
+            }
+        }
+
+        this.setBalance(balance - amount - this.withdrawFee);
         this.remainingDailyWithdrawalLimit -= amount;
 
         let transaction = new Transaction("overdraft", amount, balance - amount);
-        this.transactionHistory.push(transaction); 
+        let withdrawFee = new Transaction("fee", this.withdrawFee, this.getBalance() - this.withdrawFee);
+        this.transactionHistory.push(transaction, withdrawFee); 
     }
 }

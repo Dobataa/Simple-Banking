@@ -13,16 +13,17 @@ class Bank{
         this.nextAccountNumber = 1;
     }
 
-    openAccount(owner: string, type: AccountType, ...rest: any[]){
+    openAccount(owner: string, dailyWithdrawalLimit: number, type: AccountType, ...rest: any[]){
         let newAccount: BankAccount;
 
         if(type === "CheckingAccount"){
             let overdraftLimit = rest[0];
-            newAccount = new CheckingAccount(owner, overdraftLimit);
+            newAccount = new CheckingAccount(owner, dailyWithdrawalLimit, overdraftLimit);
 
         }else if(type === "SavingsAccount"){
             let interestRate = rest[0];
-            newAccount = new SavingsAccount(owner, interestRate);
+            let maximumBalance = rest[1];
+            newAccount = new SavingsAccount(owner, dailyWithdrawalLimit, interestRate, maximumBalance);
 
         }else{
             throw new Error ("Wrong accoung type");

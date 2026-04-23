@@ -1,4 +1,4 @@
-type TransactionType = "deposit" | "withdraw"| "transfer"| "interest"| "overdraft";
+type TransactionType = "deposit" | "withdraw"| "transfer"| "interest"| "overdraft" | "fee";
 
 export class Transaction{
     timeStamp: Date;

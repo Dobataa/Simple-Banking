@@ -1,6 +1,8 @@
 import { BankAccount } from "./BankAccount.js";
 import { Transaction } from "./Transaction.js";
 
+type CompoundingMode = "yearly" | "monthly";
+
 export class SavingsAccount extends BankAccount{
     interestRate: number;
     maximumBalance: number;
@@ -16,9 +18,13 @@ export class SavingsAccount extends BankAccount{
         this.maximumBalance = maximumBalance;
     }
 
-    applyInterest(){
+    applyInterest(mode: CompoundingMode){
         let balance = this.getBalance();
-        balance += (this.interestRate / 100) * balance;
+
+        let periods = mode === "monthly" ? 12 : 1;
+        let rate = (this.interestRate / 100) / periods;
+
+        balance += rate * balance;
 
         if(balance > this.maximumBalance){
             throw new Error("This operation will exceed the maximum balance");
