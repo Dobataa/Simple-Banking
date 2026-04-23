@@ -1,4 +1,5 @@
 import { BankAccount } from "./BankAccount.js";
+import { Transaction } from "./Transaction.js";
 
 export class SavingsAccount extends BankAccount{
     interestRate: number;
@@ -13,5 +14,8 @@ export class SavingsAccount extends BankAccount{
         balance += (this.interestRate / 100) * balance;
 
         this.setBalance(balance);
+
+        let transaction = new Transaction("interest", balance, this.getBalance());
+        this.transactionHistory.push(transaction); 
     }
 }

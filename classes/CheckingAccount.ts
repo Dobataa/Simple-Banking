@@ -1,4 +1,5 @@
 import { BankAccount } from "./BankAccount.js";
+import { Transaction } from "./Transaction.js";
 
 export class CheckingAccount extends BankAccount{
     overdraftLimit: number;
@@ -21,5 +22,8 @@ export class CheckingAccount extends BankAccount{
         }
 
         this.setBalance(balance - amount);
+
+        let transaction = new Transaction("overdraft", amount, balance - amount);
+        this.transactionHistory.push(transaction); 
     }
 }

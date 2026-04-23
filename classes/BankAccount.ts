@@ -1,7 +1,9 @@
+import { Transaction } from "./Transaction.js";
+
 export class BankAccount{
     owner: string;
     private balance: number
-    transactionHistory: string[]
+    transactionHistory: Transaction[]
 
     constructor(owner: string){
         this.owner = owner;
@@ -23,7 +25,9 @@ export class BankAccount{
         }
 
         this.balance += amount;
-        this.transactionHistory.push(`Deposited ${amount}`);
+
+        let transaction = new Transaction("deposit", amount, this.balance)
+        this.transactionHistory.push(transaction);
     }
 
     withdraw(amount: number){
@@ -32,7 +36,9 @@ export class BankAccount{
         }
 
         this.balance -= amount;
-        this.transactionHistory.push(`Withdrawed ${amount}`);  
+
+        let transaction = new Transaction("withdraw", amount, this.balance)
+        this.transactionHistory.push(transaction); 
     }
 
     transferTo(otherAccount: BankAccount, amount: number){
@@ -46,6 +52,8 @@ export class BankAccount{
 
         otherAccount.deposit(amount);
         this.balance -= amount;
-        this.transactionHistory.push(`Transfer ${amount} to ${otherAccount.owner}`);  
+        
+        let transaction = new Transaction("transfer", amount, this.balance, this.owner, otherAccount.owner);
+        this.transactionHistory.push(transaction); 
     }
 }
