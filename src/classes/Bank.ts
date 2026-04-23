@@ -4,7 +4,7 @@ import { SavingsAccount } from "./SavingsAccount.js";
 
 type AccountType = "CheckingAccount" | "SavingsAccount";
 
-class Bank{
+export class Bank{
     accounts: Record<number, BankAccount>;
     nextAccountNumber: number;
 

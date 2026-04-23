@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bank System</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input, select, button { margin: 5px; }
+    .section { margin-bottom: 20px; }
+  </style>
+</head>
+
+<body>
+
+<h1>Bank System</h1>
+
+<div class="section">
+  <h3>Create Account</h3>
+
+  <input id="owner" placeholder="Owner">
+
+  <input id="dailyLimit" placeholder="Daily limit">
+
+  <select id="type">
+    <option value="CheckingAccount">Checking</option>
+    <option value="SavingsAccount">Savings</option>
+  </select>
+
+  <input id="extra1" placeholder="Overdraft / Interest Rate">
+
+  <input id="extra2" placeholder="Max Balance (Savings only)">
+
+  <button onclick="createAccount()">Create</button>
+</div>
+
+<div class="section">
+  <h3>Operations</h3>
+
+  <input id="accId" placeholder="Account ID">
+  <input id="amount" placeholder="Amount">
+
+  <button onclick="deposit()">Deposit</button>
+  <button onclick="withdraw()">Withdraw</button>
+</div>
+
+<div class="section">
+  <h3>Transfer</h3>
+
+  <input id="fromId" placeholder="From ID">
+  <input id="toId" placeholder="To ID">
+  <input id="transferAmount" placeholder="Amount">
+
+  <button onclick="transfer()">Transfer</button>
+</div>
+
+<div class="section">
+  <h3>Savings Interest</h3>
+
+  <input id="interestId" placeholder="Account ID">
+  <select id="mode">
+    <option value="monthly">Monthly</option>
+    <option value="yearly">Yearly</option>
+  </select>
+
+  <button onclick="applyInterest()">Apply Interest</button>
+</div>
+
+<div class="section">
+  <h3>Account Management</h3>
+
+  <input id="manageId" placeholder="Account ID">
+
+  <button onclick="findAccount()">Find Account</button>
+  <button onclick="closeAccount()">Close Account</button>
+  <button onclick="listAccounts()">List All Accounts</button>
+</div>
+
+<div id="output"></div>
+
+<script type="module" src="../dist/index.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
