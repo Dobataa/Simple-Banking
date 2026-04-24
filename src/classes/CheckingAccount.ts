@@ -9,11 +9,11 @@ export class CheckingAccount extends BankAccount{
         super(owner, dailyWithdrawalLimit );
         this.isFeeApplied = false;
 
-        if(overdraftLimit >= 0){
-            this.overdraftLimit = overdraftLimit;
-        }else{
+        if(overdraftLimit < 0){
             throw new Error("Overdraft Limit should be 0 or positive")
         }
+
+        this.overdraftLimit = overdraftLimit;
     }
 
     withdraw(amount: number) {
@@ -50,7 +50,7 @@ export class CheckingAccount extends BankAccount{
         this.remainingDailyWithdrawalLimit -= amount;
 
         let transaction = new Transaction("overdraft", amount, balance - amount);
-        let withdrawFee = new Transaction("fee", this.withdrawFee, this.getBalance() - this.withdrawFee);
+        let withdrawFee = new Transaction("fee", this.withdrawFee, this.getBalance());
         this.transactionHistory.push(transaction, withdrawFee); 
     }
 }

@@ -10,6 +10,14 @@ export class BankAccount{
     withdrawFee: number
 
     constructor(owner: string, dailyWithdrawalLimit: number){
+        if (!owner || owner.trim() === "") {
+            throw new Error("Owner name is required");
+        }
+
+        if(dailyWithdrawalLimit < 0){
+            throw new Error("Daily withdraw limit cannot be negative");
+        }
+
         this.owner = owner;
         this.balance = 0;
         this.transactionHistory = [];
@@ -59,7 +67,7 @@ export class BankAccount{
         this.lastWithdrawn = now;
 
         let transaction = new Transaction("withdraw", amount, this.balance);
-        let withdrawFee = new Transaction("fee", this.withdrawFee, this.balance - this.withdrawFee);
+        let withdrawFee = new Transaction("fee", this.withdrawFee, this.balance);
         this.transactionHistory.push(transaction, withdrawFee); 
     }
 
@@ -72,7 +80,7 @@ export class BankAccount{
             throw new Error("Not enough money to transfer");
         }
 
-        otherAccount.deposit(amount);
+        otherAccount.transferFrom(amount, this.owner);
         this.balance -= amount;
         
         let transaction = new Transaction
@@ -85,6 +93,25 @@ export class BankAccount{
         );
 
         this.transactionHistory.push(transaction); 
+    }
+
+    transferFrom(amount: number, fromOwner: string){
+        if(amount < 0){
+            throw new Error("Cannot deposit negative amount");
+        }
+
+        this.balance += amount;
+
+        let transaction = new Transaction
+        (
+            "transfer", 
+            amount, 
+            this.balance, 
+            fromOwner, 
+            this.owner
+        );
+
+        this.transactionHistory.push(transaction);
     }
 
     protected isDifferentDay(d1: Date, d2: Date): boolean {

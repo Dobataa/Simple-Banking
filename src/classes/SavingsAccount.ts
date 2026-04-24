@@ -1,7 +1,7 @@
 import { BankAccount } from "./BankAccount.js";
 import { Transaction } from "./Transaction.js";
 
-type CompoundingMode = "yearly" | "monthly";
+export type CompoundingMode = "yearly" | "monthly";
 
 export class SavingsAccount extends BankAccount{
     interestRate: number;
@@ -14,6 +14,14 @@ export class SavingsAccount extends BankAccount{
         maximumBalance: number
     ){
         super(owner, dailyWithdrawalLimit);
+
+        if(interestRate < 0){
+            throw new Error("Interest rate cannot be negative");
+        }
+
+        if(maximumBalance < 0){
+            throw new Error("Maximum balance cannot be negative");
+        }
         this.interestRate = interestRate;
         this.maximumBalance = maximumBalance;
     }
@@ -23,8 +31,9 @@ export class SavingsAccount extends BankAccount{
 
         let periods = mode === "monthly" ? 12 : 1;
         let rate = (this.interestRate / 100) / periods;
+        let interest = rate * balance;
 
-        balance += rate * balance;
+        balance += interest;
 
         if(balance > this.maximumBalance){
             throw new Error("This operation will exceed the maximum balance");
@@ -32,7 +41,7 @@ export class SavingsAccount extends BankAccount{
 
         this.setBalance(balance);
 
-        let transaction = new Transaction("interest", balance, this.getBalance());
+        let transaction = new Transaction("interest", interest ,balance);
         this.transactionHistory.push(transaction); 
     }
 

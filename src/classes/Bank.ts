@@ -2,7 +2,7 @@ import type { BankAccount } from "./BankAccount.js";
 import { CheckingAccount } from "./CheckingAccount.js";
 import { SavingsAccount } from "./SavingsAccount.js";
 
-type AccountType = "CheckingAccount" | "SavingsAccount";
+export type AccountType = "CheckingAccount" | "SavingsAccount";
 
 export class Bank{
     accounts: Record<number, BankAccount>;
@@ -53,7 +53,7 @@ export class Bank{
 
     listAccounts(){
         for(let key in this.accounts){
-            console.log(`${key} - ${this.accounts[key]}`);
+            console.log(`Id: ${key}`, this.accounts[key]);
         }
     }
 }
