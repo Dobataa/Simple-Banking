@@ -24,10 +24,9 @@ A small banking system built with TypeScript and Node.js.
 
 ## Installation
 
-```bash
-git clone <your-repo-url>
-cd Simple-Banking
+clone the repo
 
+```bash
 npm install
 npm run build
 npm run start
